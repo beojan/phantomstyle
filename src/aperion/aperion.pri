@@ -1,10 +1,10 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/phantomcolor.h \
-    $$PWD/phantomstyle.h \
-    $$PWD/phantomtweak.h
+    $$PWD/aperioncolor.h \
+    $$PWD/aperionstyle.h \
+    $$PWD/aperiontweak.h
 
 SOURCES += \
-    $$PWD/phantomcolor.cpp \
-    $$PWD/phantomstyle.cpp
+    $$PWD/aperioncolor.cpp \
+    $$PWD/aperionstyle.cpp

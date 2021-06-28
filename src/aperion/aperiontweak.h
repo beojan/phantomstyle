@@ -1,16 +1,16 @@
-#ifndef PHANTOMTWEAK_H
-#define PHANTOMTWEAK_H
+#ifndef APERIONTWEAK_H
+#define APERIONTWEAK_H
 
-// Phantom-specific tweaks that can be applied to QWidgets. These should not
+// Aperion-specific tweaks that can be applied to QWidgets. These should not
 // impact the functionality of the software, but may provide minor visual
-// improvements in the case that Phantom is being used as the QStyle.
+// improvements in the case that Aperion is being used as the QStyle.
 
-namespace Phantom {
+namespace Aperion {
 namespace Tweak {
 
-// "_phantom_menubar_no_ruler"
+// "_aperion_menubar_no_ruler"
 //
-// myMenuBar->setProperty(Phantom::Tweak::menubar_no_ruler, true);
+// myMenuBar->setProperty(Aperion::Tweak::menubar_no_ruler, true);
 //
 // Causes a QMenuBar to not have the horizontal divider line to be drawn
 // beneath it. Useful for windows where the main content widget spans the full
@@ -22,5 +22,5 @@ namespace Tweak {
 extern const char* const menubar_no_ruler;
 
 } // namespace Tweak
-} // namespace Phantom
+} // namespace Aperion
 #endif

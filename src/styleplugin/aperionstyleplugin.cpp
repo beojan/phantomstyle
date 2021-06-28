@@ -1,12 +1,12 @@
-#include "phantomstyleplugin.h"
-#include "phantomstyle.h"
+#include "aperionstyleplugin.h"
+#include "aperionstyle.h"
 
-PhantomStylePlugin::PhantomStylePlugin() : QStylePlugin() {}
-PhantomStylePlugin::~PhantomStylePlugin() {}
-QStyle* PhantomStylePlugin::create(const QString& key) {
-  if (QString::compare(key, QLatin1String("phantom"), Qt::CaseInsensitive) != 0)
+AperionStylePlugin::AperionStylePlugin() : QStylePlugin() {}
+AperionStylePlugin::~AperionStylePlugin() {}
+QStyle* AperionStylePlugin::create(const QString& key) {
+  if (QString::compare(key, QLatin1String("aperion"), Qt::CaseInsensitive) != 0)
     return nullptr;
-  return new PhantomStyle();
+  return new AperionStyle();
 }
 
-#include "moc_phantomstyleplugin.cpp"
+#include "moc_aperionstyleplugin.cpp"

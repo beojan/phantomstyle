@@ -1,14 +1,14 @@
-#ifndef PHANTOMSTYLEPLUGIN_H
-#define PHANTOMSTYLEPLUGIN_H
+#ifndef APERIONSTYLEPLUGIN_H
+#define APERIONSTYLEPLUGIN_H
 #include <QtWidgets/qstyleplugin.h>
 
-class PhantomStylePlugin : public QStylePlugin {
+class AperionStylePlugin : public QStylePlugin {
   Q_OBJECT
   Q_PLUGIN_METADATA(IID QStyleFactoryInterface_iid FILE
-                    "phantomstyleplugin.json")
+                    "aperionstyleplugin.json")
 public:
-  PhantomStylePlugin();
-  ~PhantomStylePlugin();
+  AperionStylePlugin();
+  ~AperionStylePlugin();
   QStyle* create(const QString& key) override;
 };
 #endif

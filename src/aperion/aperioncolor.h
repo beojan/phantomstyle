@@ -1,8 +1,8 @@
-#ifndef PHANTOMCOLOR_H
-#define PHANTOMCOLOR_H
+#ifndef APERIONCOLOR_H
+#define APERIONCOLOR_H
 #include <QtGui/qcolor.h>
 
-namespace Phantom {
+namespace Aperion {
 struct Rgb;
 struct Hsl;
 
@@ -79,5 +79,5 @@ Hsl Hsl::ofQColor(const QColor& color) {
   Rgb rgb = rgb_of_qcolor(color);
   return hsl_of_rgb(rgb.r, rgb.g, rgb.b);
 }
-} // namespace Phantom
+} // namespace Aperion
 #endif

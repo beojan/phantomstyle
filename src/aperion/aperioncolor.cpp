@@ -1,4 +1,4 @@
-#include "phantomcolor.h"
+#include "aperioncolor.h"
 #include <cmath>
 #include <float.h>
 #include <math.h>
@@ -31,12 +31,12 @@
  * IN THE SOFTWARE.
  */
 
-namespace Phantom {
+namespace Aperion {
 namespace {
 // clang-format off
 
 // These declarations originate from hsluv.h, from the hsluv-c library. The
-// hpluv functions have been removed, as they are unnecessary for Phantom.
+// hpluv functions have been removed, as they are unnecessary for Aperion.
 /**
  * Convert HSLuv to RGB.
  *
@@ -64,13 +64,13 @@ void rgb2hsluv(double r, double g, double b, double* ph, double* ps, double* pl)
 // Contents below originate from hsluv.c from the hsluv-c library. They have
 // been wrapped in a C++ namespace to avoid collisions and to reduce the
 // translation unit count, and hsluv's own sRGB conversion code has been
-// stripped out (sRGB conversion is now performed in the Phantom color code
+// stripped out (sRGB conversion is now performed in the Aperion color code
 // when going to/from the Rgb type.)
 //
 // If you need to update the hsluv-c code, be mindful of the removed sRGB
 // conversions -- you will need to make similar modifications to the upstream
 // hsluv-c code. Also note that that the hpluv (pastel) functions have been
-// removed, as they are not used in Phantom.
+// removed, as they are not used in Aperion.
 typedef struct Triplet_tag Triplet;
 struct Triplet_tag {
     double a;
@@ -369,12 +369,12 @@ rgb2hsluv(double r, double g, double b, double* ph, double* ps, double* pl)
 
 // clang-format on
 } // namespace
-} // namespace Phantom
+} // namespace Aperion
 
 
-// The code below is for Phantom, and is used for the Rgb/Hsl-based interface
+// The code below is for Aperion, and is used for the Rgb/Hsl-based interface
 // for color operations.
-namespace Phantom {
+namespace Aperion {
 namespace {
 // Note: these constants might be out of range when qreal is defined as float
 // instead of double.
@@ -425,4 +425,4 @@ Rgb Rgb::lerp(const Rgb& x, const Rgb& y, qreal a) {
   z.b = (1.0 - a) * x.b + a * y.b;
   return z;
 }
-} // namespace Phantom
+} // namespace Aperion

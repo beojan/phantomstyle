@@ -1,6 +1,6 @@
-#include "phantomstyle.h"
-#include "phantomcolor.h"
-#include "phantomtweak.h"
+#include "aperionstyle.h"
+#include "aperioncolor.h"
+#include "aperiontweak.h"
 #include <QtCore/qmath.h>
 #include <QtCore/qpoint.h>
 #include <QtCore/qshareddata.h>
@@ -85,9 +85,9 @@ QT_BEGIN_NAMESPACE
 Q_GUI_EXPORT int qt_defaultDpiX();
 QT_END_NAMESPACE
 
-namespace Phantom {
+namespace Aperion {
 namespace Tweak {
-const char* const menubar_no_ruler = "_phantom_menubar_no_ruler";
+const char* const menubar_no_ruler = "_aperion_menubar_no_ruler";
 }
 namespace {
 Q_NEVER_INLINE bool hasTweakTrue(const QObject* object, const char* tweakName) {
@@ -97,9 +97,9 @@ Q_NEVER_INLINE bool hasTweakTrue(const QObject* object, const char* tweakName) {
   return value.toBool();
 }
 } // namespace
-} // namespace Phantom
+} // namespace Aperion
 
-namespace Phantom {
+namespace Aperion {
 namespace {
 enum {
   MenuMinimumWidth = 10,  // Smallest width that menu items can have
@@ -169,7 +169,7 @@ static const bool ItemView_UseFontHeightForDecorationSize = true;
 //
 // This doesn't disable creating the color/brush resource, even though it's
 // currently a compile-time-only option, because it may be changed to be part
-// of some dynamic config system for Phantom in the future, or have a
+// of some dynamic config system for Aperion in the future, or have a
 // per-widget style hint associated with it.
 static const bool TabBar_InactiveTabsHaveSpecular = false;
 
@@ -182,7 +182,7 @@ struct Grad {
   }
   QColor sample(qreal alpha) const {
     Hsl hsl = Rgb::lerp(rgbA, rgbB, alpha).toHsl();
-    hsl.l = Phantom::lerp(lA, lB, alpha);
+    hsl.l = Aperion::lerp(lA, lB, alpha);
     return hsl.toQColor();
   }
   Rgb rgbA, rgbB;
@@ -193,7 +193,7 @@ namespace DeriveColors {
 Q_NEVER_INLINE QColor adjustLightness(const QColor& qcolor, qreal ld) {
   Hsl hsl = Hsl::ofQColor(qcolor);
   const qreal gamma = 3.0;
-  hsl.l = std::pow(Phantom::saturate(std::pow(hsl.l, 1.0 / gamma) + ld * 0.8),
+  hsl.l = std::pow(Aperion::saturate(std::pow(hsl.l, 1.0 / gamma) + ld * 0.8),
                    gamma);
   return hsl.toQColor();
 }
@@ -245,7 +245,7 @@ QColor progressBarOutlineColorOf(const QPalette& pal) {
   // Pretty wasteful
   Hsl hsl0 = Hsl::ofQColor(pal.color(QPalette::Window));
   Hsl hsl1 = Hsl::ofQColor(pal.color(QPalette::Highlight));
-  hsl1.l = Phantom::saturate(qMin(hsl0.l - 0.1, hsl1.l - 0.2));
+  hsl1.l = Aperion::saturate(qMin(hsl0.l - 0.1, hsl1.l - 0.2));
   return hsl1.toQColor();
 }
 QColor itemViewMultiSelectionCurrentBorderOf(const QPalette& pal) {
@@ -571,11 +571,11 @@ Q_NEVER_INLINE PhSwatchPtr getCachedSwatchOfQPalette(
 }
 
 } // namespace
-} // namespace Phantom
+} // namespace Aperion
 
-class PhantomStylePrivate {
+class AperionStylePrivate {
 public:
-  PhantomStylePrivate();
+  AperionStylePrivate();
 
   // A fast'n'easy hash of QPalette::cacheKey()+QPalette::currentColorGroup()
   // of only the head element of swatchCache list. The most common thing that
@@ -608,11 +608,11 @@ public:
   // the fast path.
   quint64 headSwatchFastKey;
 
-  Phantom::PhSwatchCache swatchCache;
+  Aperion::PhSwatchCache swatchCache;
   QPen checkBox_pen_scratch;
 };
 
-namespace Phantom {
+namespace Aperion {
 namespace {
 
 // Minimal QPainter save/restore just for pen, brush, and AA render hint. If
@@ -916,7 +916,7 @@ Q_NEVER_INLINE QPolygonF calcLines(const QStyleOptionSlider* dial) {
 // all the shinyness in QWindowsStyle, hence we place it here
 Q_NEVER_INLINE void drawDial(const QStyleOptionSlider* option,
                              QPainter* painter) {
-  namespace Dc = Phantom::DeriveColors;
+  namespace Dc = Aperion::DeriveColors;
   const QPalette& pal = option->palette;
   QColor buttonColor = Dc::buttonColor(option->palette);
   const int width = option->rect.width();
@@ -1057,7 +1057,7 @@ Q_NEVER_INLINE void drawArrow(QPainter* painter, QRect rect, Qt::ArrowType type,
   if (rect.isEmpty())
     return;
   using namespace SwatchColors;
-  Phantom::drawArrow(
+  Aperion::drawArrow(
       painter, rect, type,
       swatch.brush(allowEnabled ? S_indicator_current : S_indicator_disabled));
 }
@@ -1068,7 +1068,7 @@ Q_NEVER_INLINE void drawArrow(QPainter* painter, QRect rect, Qt::ArrowType type,
 Q_NEVER_INLINE void drawCheck(QPainter* painter, QPen& scratchPen,
                               const QRectF& r, const PhSwatch& swatch,
                               Swatchy color) {
-  using namespace Phantom::SwatchColors;
+  using namespace Aperion::SwatchColors;
   qreal rx, ry, rw, rh;
   QRectF(r).getRect(&rx, &ry, &rw, &rh);
   qreal penWidth = 0.25 * qMin(rw, rh);
@@ -1092,7 +1092,7 @@ Q_NEVER_INLINE void drawCheck(QPainter* painter, QPen& scratchPen,
   scratchPen.setCapStyle(Qt::RoundCap);
   scratchPen.setJoinStyle(Qt::RoundJoin);
   scratchPen.setWidthF(penWidth);
-  Phantom::PSave save(painter);
+  Aperion::PSave save(painter);
   if (!painter->testRenderHint(QPainter::Antialiasing))
     painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(scratchPen);
@@ -1103,7 +1103,7 @@ Q_NEVER_INLINE void drawCheck(QPainter* painter, QPen& scratchPen,
 Q_NEVER_INLINE void drawHyphen(QPainter* painter, QPen& scratchPen,
                                const QRectF& r, const PhSwatch& swatch,
                                Swatchy color) {
-  using namespace Phantom::SwatchColors;
+  using namespace Aperion::SwatchColors;
   qreal rx, ry, rw, rh;
   QRectF(r).getRect(&rx, &ry, &rw, &rh);
   qreal penWidth = 0.25 * qMin(rw, rh);
@@ -1118,7 +1118,7 @@ Q_NEVER_INLINE void drawHyphen(QPainter* painter, QPen& scratchPen,
   scratchPen.setBrush(swatch.brush(color));
   scratchPen.setCapStyle(Qt::RoundCap);
   scratchPen.setWidthF(penWidth);
-  Phantom::PSave save(painter);
+  Aperion::PSave save(painter);
   if (!painter->testRenderHint(QPainter::Antialiasing))
     painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(scratchPen);
@@ -1317,23 +1317,23 @@ Q_NEVER_INLINE void paintBorderedRoundRect(QPainter* p, QRect rect,
   }
 }
 } // namespace
-} // namespace Phantom
+} // namespace Aperion
 
 
-PhantomStylePrivate::PhantomStylePrivate() : headSwatchFastKey(0) {}
+AperionStylePrivate::AperionStylePrivate() : headSwatchFastKey(0) {}
 
-PhantomStyle::PhantomStyle() : d(new PhantomStylePrivate) {
-  setObjectName(QLatin1String("Phantom"));
+AperionStyle::AperionStyle() : d(new AperionStylePrivate) {
+  setObjectName(QLatin1String("Aperion"));
 }
 
-PhantomStyle::~PhantomStyle() { delete d; }
+AperionStyle::~AperionStyle() { delete d; }
 
 // Draw text in a rectangle. The current pen set on the painter is used, unless
 // an explicit textRole is set, in which case the palette will be used. The
 // enabled bool indicates whether the text is enabled or not, and can influence
 // how the text is drawn outside of just color. Wrapping and alignment flags
 // can be passed in `alignment`.
-void PhantomStyle::drawItemText(QPainter* painter, const QRect& rect,
+void AperionStyle::drawItemText(QPainter* painter, const QRect& rect,
                                 int alignment, const QPalette& pal,
                                 bool enabled, const QString& text,
                                 QPalette::ColorRole textRole) const {
@@ -1358,7 +1358,7 @@ void PhantomStyle::drawItemText(QPainter* painter, const QRect& rect,
 }
 
 
-void PhantomStyle::drawPrimitive(PrimitiveElement elem,
+void AperionStyle::drawPrimitive(PrimitiveElement elem,
                                  const QStyleOption* option, QPainter* painter,
                                  const QWidget* widget) const {
   Q_ASSERT(option);
@@ -1370,9 +1370,9 @@ void PhantomStyle::drawPrimitive(PrimitiveElement elem,
       QMetaEnum::fromType<QStyle::PrimitiveElement>().valueToKey(elem);
   EASY_TEXT("Element", elemCString);
 #endif
-  using Swatchy = Phantom::Swatchy;
-  using namespace Phantom::SwatchColors;
-  namespace Ph = Phantom;
+  using Swatchy = Aperion::Swatchy;
+  using namespace Aperion::SwatchColors;
+  namespace Ph = Aperion;
   auto ph_swatchPtr = getCachedSwatchOfQPalette(
       &d->swatchCache, &d->headSwatchFastKey, option->palette);
   const Ph::PhSwatch& swatch = *ph_swatchPtr.data();
@@ -2024,7 +2024,7 @@ void PhantomStyle::drawPrimitive(PrimitiveElement elem,
   case PE_FrameStatusBarItem:
     break;
   case PE_IndicatorTabClose:
-  case Phantom_PE_IndicatorTabNew: {
+  case Aperion_PE_IndicatorTabNew: {
     Swatchy fg = S_windowText;
     Swatchy bg = S_none;
     if ((option->state & State_Enabled) && (option->state & State_MouseOver)) {
@@ -2057,7 +2057,7 @@ void PhantomStyle::drawPrimitive(PrimitiveElement elem,
       painter->drawLine(QPointF(x - 0.5, y + h + 0.5),
                         QPointF(x + 0.5 + w, y - 0.5));
       break;
-    case Phantom_PE_IndicatorTabNew:
+    case Aperion_PE_IndicatorTabNew:
       // kinda hacky here on extra len
       painter->drawLine(QPointF(x + w / 2, y - 1.0),
                         QPointF(x + w / 2, y + h + 1.0));
@@ -2084,7 +2084,7 @@ void PhantomStyle::drawPrimitive(PrimitiveElement elem,
     painter->fillRect(bgRect, swatch.color(S_window));
     break;
   }
-  case Phantom_PE_ScrollBarSliderVertical: {
+  case Aperion_PE_ScrollBarSliderVertical: {
     bool isLeftToRight = option->direction != Qt::RightToLeft;
     bool isSunken = option->state & State_Sunken;
     Swatchy thumbFill, thumbSpecular;
@@ -2112,7 +2112,7 @@ void PhantomStyle::drawPrimitive(PrimitiveElement elem,
     Ph::fillRectOutline(painter, mainRect, 1, swatch.color(thumbSpecular));
     break;
   }
-  case Phantom_PE_WindowFrameColor: {
+  case Aperion_PE_WindowFrameColor: {
     painter->fillRect(option->rect, swatch.color(S_window_outline));
     break;
   }
@@ -2122,7 +2122,7 @@ void PhantomStyle::drawPrimitive(PrimitiveElement elem,
   }
 }
 
-void PhantomStyle::drawControl(ControlElement element,
+void AperionStyle::drawControl(ControlElement element,
                                const QStyleOption* option, QPainter* painter,
                                const QWidget* widget) const {
 #ifdef BUILD_WITH_EASY_PROFILER
@@ -2131,9 +2131,9 @@ void PhantomStyle::drawControl(ControlElement element,
       QMetaEnum::fromType<QStyle::ControlElement>().valueToKey(element);
   EASY_TEXT("Element", elemCString);
 #endif
-  using Swatchy = Phantom::Swatchy;
-  using namespace Phantom::SwatchColors;
-  namespace Ph = Phantom;
+  using Swatchy = Aperion::Swatchy;
+  using namespace Aperion::SwatchColors;
+  namespace Ph = Aperion;
   auto ph_swatchPtr = Ph::getCachedSwatchOfQPalette(
       &d->swatchCache, &d->headSwatchFastKey, option->palette);
   const Ph::PhSwatch& swatch = *ph_swatchPtr.data();
@@ -2206,7 +2206,7 @@ void PhantomStyle::drawControl(ControlElement element,
   }
 #endif // QT_CONFIG(splitter)
 #if QT_CONFIG(rubberband)
-  // TODO update this for phantom
+  // TODO update this for aperion
   case CE_RubberBand: {
     if (!qstyleoption_cast<const QStyleOptionRubberBand*>(option))
       break;
@@ -2630,7 +2630,7 @@ void PhantomStyle::drawControl(ControlElement element,
                           mbi->state & State_Enabled, mbi->text, textRole);
     if (isSelected)
       break;
-    if (Phantom::hasTweakTrue(widget, Phantom::Tweak::menubar_no_ruler))
+    if (Aperion::hasTweakTrue(widget, Aperion::Tweak::menubar_no_ruler))
       break;
     if (!isSelected) {
       Ph::fillRectEdges(painter, r, Qt::BottomEdge, 1,
@@ -2648,7 +2648,7 @@ void PhantomStyle::drawControl(ControlElement element,
         Ph::MenuItemMetrics::ofFontHeight(option->fontMetrics.height());
     // Draws one item in a popup menu.
     if (menuItem->menuItemType == QStyleOptionMenuItem::Separator) {
-      // Phantom ignores text and icons in menu separators, because
+      // Aperion ignores text and icons in menu separators, because
       // 1) The text and icons for separators don't render on Mac native menus
       // 2) There doesn't seem to be a way to account for the width of the text
       // properly (Fusion will often draw separator text clipped off)
@@ -2792,7 +2792,7 @@ void PhantomStyle::drawControl(ControlElement element,
       // high DPI, setting the pointSizeF and setting the font again won't
       // necessarily give us the right font (at least in Windows.) The font
       // might have too thin of a weight, and probably other problems. So just
-      // forget about it: we'll have Phantom return 0 for the style hint that
+      // forget about it: we'll have Aperion return 0 for the style hint that
       // the combo box uses to determine if it should use a QMenu popup instead
       // of a regular dropdown menu thing. The popup menu might actually be
       // better for usability in some cases, and it's how combos work on Mac
@@ -2934,7 +2934,7 @@ void PhantomStyle::drawControl(ControlElement element,
     break;
   }
   case CE_MenuBarEmptyArea: {
-    if (Phantom::hasTweakTrue(widget, Phantom::Tweak::menubar_no_ruler))
+    if (Aperion::hasTweakTrue(widget, Aperion::Tweak::menubar_no_ruler))
       break;
     QRect rect = option->rect;
     Ph::fillRectEdges(painter, rect, Qt::BottomEdge, 1,
@@ -3099,11 +3099,11 @@ void PhantomStyle::drawControl(ControlElement element,
   }
 }
 
-QPalette PhantomStyle::standardPalette() const {
+QPalette AperionStyle::standardPalette() const {
   return QCommonStyle::standardPalette();
 }
 
-void PhantomStyle::drawComplexControl(ComplexControl control,
+void AperionStyle::drawComplexControl(ComplexControl control,
                                       const QStyleOptionComplex* option,
                                       QPainter* painter,
                                       const QWidget* widget) const {
@@ -3113,9 +3113,9 @@ void PhantomStyle::drawComplexControl(ComplexControl control,
       QMetaEnum::fromType<QStyle::ComplexControl>().valueToKey(control);
   EASY_TEXT("ComplexControl", controlCString);
 #endif
-  using Swatchy = Phantom::Swatchy;
-  using namespace Phantom::SwatchColors;
-  namespace Ph = Phantom;
+  using Swatchy = Aperion::Swatchy;
+  using namespace Aperion::SwatchColors;
+  namespace Ph = Aperion;
   auto ph_swatchPtr = Ph::getCachedSwatchOfQPalette(
       &d->swatchCache, &d->headSwatchFastKey, option->palette);
   const Ph::PhSwatch& swatch = *ph_swatchPtr.data();
@@ -4052,7 +4052,7 @@ void PhantomStyle::drawComplexControl(ComplexControl control,
   }
 }
 
-int PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
+int AperionStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
                               const QWidget* widget) const {
   int val = -1;
   switch (metric) {
@@ -4086,7 +4086,7 @@ int PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
     // Do not dpi-scale because the drawn frame is always exactly 1 pixel thick
     // My note:
     // I seriously doubt, with all of the hacky add-or-remove-1 things
-    // everywhere in fusion (and still in phantom), and the fact that fusion is
+    // everywhere in fusion (and still in aperion), and the fact that fusion is
     // totally broken in high dpi, that this actually holds true.
     return 1;
   case PM_SpinBoxFrameWidth:
@@ -4123,12 +4123,12 @@ int PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
     break;
   case PM_MenuBarHMargin:
     // option is usually nullptr, use widget instead to get font metrics
-    if (!Phantom::MenuBarLeftMargin || !widget) {
+    if (!Aperion::MenuBarLeftMargin || !widget) {
       val = 0;
       break;
     }
     return (int)((qreal)widget->fontMetrics().height() *
-                 Phantom::MenuBar_HorizontalPaddingFontRatio);
+                 Aperion::MenuBar_HorizontalPaddingFontRatio);
   case PM_MenuBarVMargin:
   case PM_MenuBarPanelWidth:
     val = 0;
@@ -4137,7 +4137,7 @@ int PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
     val = 9;
     break;
   case PM_ToolBarHandleExtent: {
-    int dotLen = (int)Phantom::dpiScaled(2);
+    int dotLen = (int)Aperion::dpiScaled(2);
     return dotLen * (3 * 2 - 1);
   }
   case PM_ToolBarItemSpacing:
@@ -4152,7 +4152,7 @@ int PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
   case PM_ListViewIconSize:
   case PM_SmallIconSize:
 #if QT_CONFIG(itemviews)
-    if (Phantom::ItemView_UseFontHeightForDecorationSize && widget &&
+    if (Aperion::ItemView_UseFontHeightForDecorationSize && widget &&
         qobject_cast<const QAbstractItemView*>(widget)) {
       // QAbstractItemView::viewOptions() always uses nullptr for the
       // styleoption when querying for PM_SmallIconSize. The best we can do is
@@ -4189,14 +4189,14 @@ int PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
     if (!option)
       break;
     return (int)((qreal)option->fontMetrics.height() *
-                 Phantom::TabBar_HPaddingFontRatio) +
-           (int)Phantom::dpiScaled(4);
+                 Aperion::TabBar_HPaddingFontRatio) +
+           (int)Aperion::dpiScaled(4);
   case PM_TabBarTabVSpace:
     if (!option)
       break;
     return (int)((qreal)option->fontMetrics.height() *
-                 Phantom::TabBar_VPaddingFontRatio) +
-           (int)Phantom::dpiScaled(2);
+                 Aperion::TabBar_VPaddingFontRatio) +
+           (int)Aperion::dpiScaled(2);
   case PM_TabBarTabOverlap:
     val = 1;
     break;
@@ -4240,14 +4240,14 @@ int PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption* option,
   default:
     return QCommonStyle::pixelMetric(metric, option, widget);
   }
-  return (int)Phantom::dpiScaled(val);
+  return (int)Aperion::dpiScaled(val);
 }
 
-QSize PhantomStyle::sizeFromContents(ContentsType type,
+QSize AperionStyle::sizeFromContents(ContentsType type,
                                      const QStyleOption* option,
                                      const QSize& size,
                                      const QWidget* widget) const {
-  namespace Ph = Phantom;
+  namespace Ph = Aperion;
   // Cases which do not rely on the parent class to do any work
   switch (type) {
   case CT_RadioButton:
@@ -4313,12 +4313,12 @@ QSize PhantomStyle::sizeFromContents(ContentsType type,
     // Calculating the right margins requires knowing whether or not the menu
     // item has a submenu arrow.
     w += metrics.leftMargin;
-    // Phantom treats every menu item with the same space on the left for a
+    // Aperion treats every menu item with the same space on the left for a
     // check mark, even if it doesn't have the checkable property.
     w += metrics.checkWidth + metrics.checkRightSpace;
 
     if (!menuItem->icon.isNull()) {
-      // Phantom disregards any user-specified icon sizing at the moment.
+      // Aperion disregards any user-specified icon sizing at the moment.
       w += metrics.fontHeight;
       w += metrics.iconRightSpace;
     }
@@ -4398,7 +4398,7 @@ QSize PhantomStyle::sizeFromContents(ContentsType type,
     if (opt->subControls & (SC_GroupBoxCheckBox | SC_GroupBoxLabel)) {
       int fontHeight = option->fontMetrics.height();
       yadd += (int)((qreal)fontHeight *
-                    Phantom::GroupBox_LabelBottomMarginFontRatio);
+                    Aperion::GroupBox_LabelBottomMarginFontRatio);
     }
     // We can test for the frame in general, but unfortunately testing to see
     // if it's the 1-line "flat" style or 4-line box/rect "anything else" style
@@ -4424,13 +4424,13 @@ QSize PhantomStyle::sizeFromContents(ContentsType type,
     // comment says it's to prevent "icons from overlapping" but I have no idea
     // how that's supposed to help. And we don't necessarily want those extra 2
     // pixels. Anyway, I don't want to copy and paste all of that code into
-    // Phantom and then maintain it. So when Phantom is in the mode where we're
+    // Aperion and then maintain it. So when Aperion is in the mode where we're
     // basing the item view decoration sizes off of the font size, we'll just
     // take a guess when QCommonStyle has added 2 to the height (because the
     // row height and decoration height are both the font height), and
     // re-remove those two pixels.
 #if 1
-    if (Phantom::ItemView_UseFontHeightForDecorationSize) {
+    if (Aperion::ItemView_UseFontHeightForDecorationSize) {
       int fh = vopt->fontMetrics.height();
       if (sz.height() == fh + 2 && vopt->decorationSize.height() == fh) {
         sz.setHeight(fh);
@@ -4496,11 +4496,11 @@ QSize PhantomStyle::sizeFromContents(ContentsType type,
       }
     }
     int hpad = (int)((qreal)fmheight *
-                     Phantom::PushButton_HorizontalPaddingFontHeightRatio);
+                     Aperion::PushButton_HorizontalPaddingFontHeightRatio);
     newSize.rwidth() += hpad * 2;
 #if QT_CONFIG(dialogbuttonbox)
     if (widget && qobject_cast<const QDialogButtonBox*>(widget->parent())) {
-      int dialogButtonMinWidth = (int)Phantom::dpiScaled(80);
+      int dialogButtonMinWidth = (int)Aperion::dpiScaled(80);
       newSize.rwidth() = qMax(newSize.width(), dialogButtonMinWidth);
     }
 #endif
@@ -4549,9 +4549,9 @@ QSize PhantomStyle::sizeFromContents(ContentsType type,
   return newSize;
 }
 
-void PhantomStyle::polish(QApplication* app) { QCommonStyle::polish(app); }
+void AperionStyle::polish(QApplication* app) { QCommonStyle::polish(app); }
 
-void PhantomStyle::polish(QWidget* widget) {
+void AperionStyle::polish(QWidget* widget) {
   QCommonStyle::polish(widget);
   // Leaving this code here to debug/remove hover stuff if necessary
 #if 0
@@ -4585,9 +4585,9 @@ void PhantomStyle::polish(QWidget* widget) {
 #endif
 }
 
-void PhantomStyle::polish(QPalette& pal) { QCommonStyle::polish(pal); }
+void AperionStyle::polish(QPalette& pal) { QCommonStyle::polish(pal); }
 
-void PhantomStyle::unpolish(QWidget* widget) {
+void AperionStyle::unpolish(QWidget* widget) {
   QCommonStyle::unpolish(widget);
   // Leaving this code here to debug/remove hover stuff if necessary
 #if 0
@@ -4620,13 +4620,13 @@ void PhantomStyle::unpolish(QWidget* widget) {
 #endif
 }
 
-void PhantomStyle::unpolish(QApplication* app) { QCommonStyle::unpolish(app); }
+void AperionStyle::unpolish(QApplication* app) { QCommonStyle::unpolish(app); }
 
-QRect PhantomStyle::subControlRect(ComplexControl control,
+QRect AperionStyle::subControlRect(ComplexControl control,
                                    const QStyleOptionComplex* option,
                                    SubControl subControl,
                                    const QWidget* widget) const {
-  namespace Ph = Phantom;
+  namespace Ph = Aperion;
   QRect rect =
       QCommonStyle::subControlRect(control, option, subControl, widget);
   switch (control) {
@@ -4764,7 +4764,7 @@ QRect PhantomStyle::subControlRect(ComplexControl control,
       // width()/horizontalAdvance() is faster than size() and good enough for
       // us, since we only support a single line of text here anyway.
       int textWidth =
-          Phantom::fontMetricsWidth(option->fontMetrics, groupBox->text);
+          Aperion::fontMetricsWidth(option->fontMetrics, groupBox->text);
       int indicatorWidth =
           proxy()->pixelMetric(PM_IndicatorWidth, option, widget);
       int indicatorHeight =
@@ -4949,27 +4949,27 @@ QRect PhantomStyle::subControlRect(ComplexControl control,
   return rect;
 }
 
-QRect PhantomStyle::itemPixmapRect(const QRect& r, int flags,
+QRect AperionStyle::itemPixmapRect(const QRect& r, int flags,
                                    const QPixmap& pixmap) const {
   return QCommonStyle::itemPixmapRect(r, flags, pixmap);
 }
-void PhantomStyle::drawItemPixmap(QPainter* painter, const QRect& rect,
+void AperionStyle::drawItemPixmap(QPainter* painter, const QRect& rect,
                                   int alignment, const QPixmap& pixmap) const {
   QCommonStyle::drawItemPixmap(painter, rect, alignment, pixmap);
 }
 QStyle::SubControl
-PhantomStyle::hitTestComplexControl(ComplexControl cc,
+AperionStyle::hitTestComplexControl(ComplexControl cc,
                                     const QStyleOptionComplex* opt,
                                     const QPoint& pt, const QWidget* w) const {
   return QCommonStyle::hitTestComplexControl(cc, opt, pt, w);
 }
-QPixmap PhantomStyle::generatedIconPixmap(QIcon::Mode iconMode,
+QPixmap AperionStyle::generatedIconPixmap(QIcon::Mode iconMode,
                                           const QPixmap& pixmap,
                                           const QStyleOption* opt) const {
   return QCommonStyle::generatedIconPixmap(iconMode, pixmap, opt);
 }
 
-int PhantomStyle::styleHint(StyleHint hint, const QStyleOption* option,
+int AperionStyle::styleHint(StyleHint hint, const QStyleOption* option,
                             const QWidget* widget,
                             QStyleHintReturn* returnData) const {
   switch (hint) {
@@ -5012,11 +5012,11 @@ int PhantomStyle::styleHint(StyleHint hint, const QStyleOption* option,
     // the huge mass of stuff for item view layout and drawing. Therefore, the
     // best we can do is at least try to get consistent behavior: if it's a
     // list view, just always return 1 for ShowDecorationSelected.
-    if (!Phantom::ShowItemViewDecorationSelected &&
+    if (!Aperion::ShowItemViewDecorationSelected &&
         qobject_cast<const QListView*>(widget))
       return 1;
 #endif
-    return (int)Phantom::ShowItemViewDecorationSelected;
+    return (int)Aperion::ShowItemViewDecorationSelected;
   case SH_ItemView_MovementWithoutUpdatingSelection:
     return 1;
 #if QT_CONFIG(itemviews)
@@ -5049,7 +5049,7 @@ int PhantomStyle::styleHint(StyleHint hint, const QStyleOption* option,
   case SH_RubberBand_Mask:
     return 0;
   case SH_ComboBox_Popup: {
-    if (!Phantom::UseQMenuForComboBoxPopup)
+    if (!Aperion::UseQMenuForComboBoxPopup)
       return 0;
 #if QT_CONFIG(combobox)
     // Fusion did this, but we don't because of font bugs (especially in high
@@ -5061,8 +5061,8 @@ int PhantomStyle::styleHint(StyleHint hint, const QStyleOption* option,
     return 0;
   }
   case SH_Table_GridLineColor: {
-    using namespace Phantom::SwatchColors;
-    namespace Ph = Phantom;
+    using namespace Aperion::SwatchColors;
+    namespace Ph = Aperion;
     if (!option)
       return 0;
     auto ph_swatchPtr = Ph::getCachedSwatchOfQPalette(
@@ -5118,7 +5118,7 @@ int PhantomStyle::styleHint(StyleHint hint, const QStyleOption* option,
   return QCommonStyle::styleHint(hint, option, widget, returnData);
 }
 
-QRect PhantomStyle::subElementRect(SubElement sr, const QStyleOption* opt,
+QRect AperionStyle::subElementRect(SubElement sr, const QStyleOption* opt,
                                    const QWidget* w) const {
   switch (sr) {
   case SE_ProgressBarLabel:
@@ -5148,7 +5148,7 @@ QRect PhantomStyle::subElementRect(SubElement sr, const QStyleOption* opt,
   }
 #if QT_CONFIG(itemviews)
   case SE_TreeViewDisclosureItem: {
-    if (Phantom::BranchesOnEdge) {
+    if (Aperion::BranchesOnEdge) {
       // Shove it all the way to the left (or right) side, probably outside of
       // the rect it gave us. Old-school.
       QRect rect = opt->rect;
@@ -5167,7 +5167,7 @@ QRect PhantomStyle::subElementRect(SubElement sr, const QStyleOption* opt,
 #if QT_CONFIG(lineedit)
   case SE_LineEditContents: {
     QRect r = QCommonStyle::subElementRect(sr, opt, w);
-    int pad = (int)Phantom::dpiScaled(Phantom::LineEdit_ContentsHPad);
+    int pad = (int)Aperion::dpiScaled(Aperion::LineEdit_ContentsHPad);
     return r.adjusted(pad, 0, -pad, 0);
   }
 #endif
@@ -5177,12 +5177,12 @@ QRect PhantomStyle::subElementRect(SubElement sr, const QStyleOption* opt,
   return QCommonStyle::subElementRect(sr, opt, w);
 }
 
-// Projects which don't use moc can define PHANTOM_NO_MOC to skip this include.
+// Projects which don't use moc can define APERION_NO_MOC to skip this include.
 // However, they will still need to deal with the Q_OBJECT macro in the header.
 // Easiest way is to probably keep your own copy of the header without the
 // macro in it. (If there's a smarter way to do this, please let me know.)
-#ifndef PHANTOM_NO_MOC
-#include "moc_phantomstyle.cpp"
+#ifndef APERION_NO_MOC
+#include "moc_aperionstyle.cpp"
 #endif
 
 // Table header layout reference

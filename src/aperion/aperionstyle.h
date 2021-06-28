@@ -1,18 +1,18 @@
-#ifndef PHANTOMSTYLE_H
-#define PHANTOMSTYLE_H
+#ifndef APERIONSTYLE_H
+#define APERIONSTYLE_H
 #include <QtWidgets/qcommonstyle.h>
 
-class PhantomStylePrivate;
-class PhantomStyle : public QCommonStyle {
+class AperionStylePrivate;
+class AperionStyle : public QCommonStyle {
   Q_OBJECT
 public:
-  PhantomStyle();
-  ~PhantomStyle();
+  AperionStyle();
+  ~AperionStyle();
 
-  enum PhantomPrimitiveElement {
-    Phantom_PE_IndicatorTabNew = PE_CustomBase + 1,
-    Phantom_PE_ScrollBarSliderVertical,
-    Phantom_PE_WindowFrameColor,
+  enum AperionPrimitiveElement {
+    Aperion_PE_IndicatorTabNew = PE_CustomBase + 1,
+    Aperion_PE_ScrollBarSliderVertical,
+    Aperion_PE_WindowFrameColor,
   };
 
   QPalette standardPalette() const override;
@@ -57,6 +57,6 @@ public:
   void unpolish(QApplication* app) override;
 
 protected:
-  PhantomStylePrivate* d;
+  AperionStylePrivate* d;
 };
 #endif
