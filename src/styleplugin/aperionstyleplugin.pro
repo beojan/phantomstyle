@@ -1,6 +1,6 @@
 QT += core gui widgets
 CONFIG += plugin
-TARGET = phantomstyleplugin
+TARGET = aperionstyleplugin
 TEMPLATE = lib
 
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -8,13 +8,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 CONFIG += rtti_off exceptions_off
 
-include(../phantom/phantom.pri)
+include(../aperion/aperion.pri)
 
-SOURCES += phantomstyleplugin.cpp
+SOURCES += aperionstyleplugin.cpp
 
-HEADERS += phantomstyleplugin.h
+HEADERS += aperionstyleplugin.h
 
-OTHER_FILES += phantomstyleplugin.json
+OTHER_FILES += aperionstyleplugin.json
 
 g++ {
     QMAKE_CXXFLAGS *= -Wno-unused-function -Wno-unknown-pragmas
